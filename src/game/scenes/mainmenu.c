@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <shadowdive/shadowdive.h>
 #include <enet/enet.h>
 #include <time.h>
@@ -136,12 +136,12 @@ void mainmenu_1v1(component *c, void *userdata) {
     controller_init(player1_ctrl);
     player1_ctrl->har = scene->player1.har;
     keys = malloc(sizeof(keyboard_keys));
-    keys->up = SDL_SCANCODE_UP;
-    keys->down = SDL_SCANCODE_DOWN;
-    keys->left = SDL_SCANCODE_LEFT;
-    keys->right = SDL_SCANCODE_RIGHT;
-    keys->punch = SDL_SCANCODE_RETURN;
-    keys->kick = SDL_SCANCODE_RSHIFT;
+    keys->up = SDLK_UP;
+    keys->down = SDLK_DOWN;
+    keys->left = SDLK_LEFT;
+    keys->right = SDLK_RIGHT;
+    keys->punch = SDLK_RETURN;
+    keys->kick = SDLK_RSHIFT;
     keyboard_create(player1_ctrl, keys);
     scene_set_player1_ctrl(scene, player1_ctrl);
 
@@ -151,12 +151,12 @@ void mainmenu_1v1(component *c, void *userdata) {
     controller_init(player2_ctrl);
     player2_ctrl->har = scene->player2.har;
     keys2 = malloc(sizeof(keyboard_keys));
-    keys2->up = SDL_SCANCODE_W;
-    keys2->down = SDL_SCANCODE_S;
-    keys2->left = SDL_SCANCODE_A;
-    keys2->right = SDL_SCANCODE_D;
-    keys2->punch = SDL_SCANCODE_LSHIFT;
-    keys2->kick = SDL_SCANCODE_LCTRL;
+    keys2->up = SDLK_w;
+    keys2->down = SDLK_s;
+    keys2->left = SDLK_a;
+    keys2->right = SDLK_d;
+    keys2->punch = SDLK_LSHIFT;
+    keys2->kick = SDLK_LCTRL;
     keyboard_create(player2_ctrl, keys2);
     scene_set_player2_ctrl(scene, player2_ctrl);
 
@@ -175,12 +175,12 @@ void mainmenu_1v2(component *c, void *userdata) {
     controller_init(player1_ctrl);
     player1_ctrl->har = scene->player1.har;
     keys = malloc(sizeof(keyboard_keys));
-    keys->up = SDL_SCANCODE_UP;
-    keys->down = SDL_SCANCODE_DOWN;
-    keys->left = SDL_SCANCODE_LEFT;
-    keys->right = SDL_SCANCODE_RIGHT;
-    keys->punch = SDL_SCANCODE_RETURN;
-    keys->kick = SDL_SCANCODE_RSHIFT;
+    keys->up = SDLK_UP;
+    keys->down = SDLK_DOWN;
+    keys->left = SDLK_LEFT;
+    keys->right = SDLK_RIGHT;
+    keys->punch = SDLK_RETURN;
+    keys->kick = SDLK_RSHIFT;
     keyboard_create(player1_ctrl, keys);
     scene_set_player1_ctrl(scene, player1_ctrl);
 
@@ -189,12 +189,12 @@ void mainmenu_1v2(component *c, void *userdata) {
     controller_init(player2_ctrl);
     player2_ctrl->har = scene->player2.har;
     keys2 = malloc(sizeof(keyboard_keys));
-    keys2->up = SDL_SCANCODE_W;
-    keys2->down = SDL_SCANCODE_S;
-    keys2->left = SDL_SCANCODE_A;
-    keys2->right = SDL_SCANCODE_D;
-    keys2->punch = SDL_SCANCODE_LSHIFT;
-    keys2->kick = SDL_SCANCODE_LCTRL;
+    keys2->up = SDLK_w;
+    keys2->down = SDLK_s;
+    keys2->left = SDLK_a;
+    keys2->right = SDLK_d;
+    keys2->punch = SDLK_LSHIFT;
+    keys2->kick = SDLK_LCTRL;
     keyboard_create(player2_ctrl, keys2);
     scene_set_player2_ctrl(scene, player2_ctrl);
 
@@ -635,12 +635,12 @@ void mainmenu_tick(scene *scene) {
 
                 // Player 1 controller -- Keyboard
                 keys = malloc(sizeof(keyboard_keys));
-                keys->up = SDL_SCANCODE_UP;
-                keys->down = SDL_SCANCODE_DOWN;
-                keys->left = SDL_SCANCODE_LEFT;
-                keys->right = SDL_SCANCODE_RIGHT;
-                keys->punch = SDL_SCANCODE_RETURN;
-                keys->kick = SDL_SCANCODE_RSHIFT;
+                keys->up = SDLK_UP;
+                keys->down = SDLK_DOWN;
+                keys->left = SDLK_LEFT;
+                keys->right = SDLK_RIGHT;
+                keys->punch = SDLK_RETURN;
+                keys->kick = SDLK_RSHIFT;
                 keyboard_create(player1_ctrl, keys);
                 scene_set_player1_ctrl(scene, player1_ctrl);
 
@@ -673,12 +673,12 @@ void mainmenu_tick(scene *scene) {
 
                 // Player 2 controller -- Keyboard
                 keys = malloc(sizeof(keyboard_keys));
-                keys->up = SDL_SCANCODE_UP;
-                keys->down = SDL_SCANCODE_DOWN;
-                keys->left = SDL_SCANCODE_LEFT;
-                keys->right = SDL_SCANCODE_RIGHT;
-                keys->punch = SDL_SCANCODE_RETURN;
-                keys->kick = SDL_SCANCODE_RSHIFT;
+                keys->up = SDLK_UP;
+                keys->down = SDLK_DOWN;
+                keys->left = SDLK_LEFT;
+                keys->right = SDLK_RIGHT;
+                keys->punch = SDLK_RETURN;
+                keys->kick = SDLK_RSHIFT;
                 keyboard_create(player2_ctrl, keys);
                 scene_set_player2_ctrl(scene, player2_ctrl);
                 host = NULL;

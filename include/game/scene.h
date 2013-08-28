@@ -1,7 +1,7 @@
 #ifndef _SCENE_H
 #define _SCENE_H
 
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include "video/texture.h"
 #include "utils/array.h"
 #include "utils/list.h"

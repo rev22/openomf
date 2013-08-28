@@ -2,7 +2,7 @@
 #define _KEYBOARD_H
 
 #include "controller/controller.h"
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 
 typedef struct keyboard_keys_t keyboard_keys;
 typedef struct keyboard_t keyboard;

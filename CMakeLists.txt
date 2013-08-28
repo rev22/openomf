@@ -2,15 +2,13 @@ cmake_minimum_required(VERSION 2.6)
 project(OpenOMF C)
 
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-scripts)
-find_package(SDL2)
+find_package(SDL)
 find_package(shadowdive)
 find_package(chipmunk)
 find_package(enet)
 find_package(dumb)
-find_package(OpenGL)
 find_package(OpenAL)
 find_package(confuse)
-find_package(GLEW)
 find_package(Libintl)
 
 link_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -36,14 +34,8 @@ add_executable(openomf
     src/utils/array.c
     src/video/video.c
     src/video/texture.c
-    src/video/fbo.c
-    src/video/shader.c
-    src/video/shaderprogram.c
-    src/video/rbo.c
     src/video/image.c
     src/video/color.c
-    src/video/glextloader.c
-    src/video/texturelist.c
     src/audio/audio.c
     src/audio/music.c
     src/audio/sound.c
@@ -82,29 +74,25 @@ add_executable(openomf
 
 set(COREINCS
     include
-    ${SDL2_INCLUDE_DIR} 
-    ${SHADOWDIVE_INCLUDE_DIR} 
+    ${SDL_INCLUDE_DIR}
+    ${SHADOWDIVE_INCLUDE_DIR}
     ${DUMB_INCLUDE_DIR} 
     ${OPENAL_INCLUDE_DIR} 
-    ${OPENGL_INCLUDE_DIR}
     ${CONFUSE_INCLUDE_DIR}
-    ${GLEW_INCLUDE_DIR}
     ${LIBINTL_INCLUDE_DIR}
     ${CHIPMUNK_INCLUDE_DIR}
     ${ENET_INCLUDE_DIR}
 )
 
 set(CORELIBS 
-    ${SDL2_LIBRARY} 
+    ${SDL_LIBRARY}
     ${SHADOWDIVE_LIBRARY} 
-    ${DUMB_LIBRARY} 
-    ${OPENGL_LIBRARY} 
+    ${DUMB_LIBRARY}
     ${OPENAL_LIBRARY}
     ${CONFUSE_LIBRARY}
-    ${GLEW_LIBRARY}
     ${LIBINTL_LIBRARIES}
     ${CHIPMUNK_LIBRARY}
-    ${ENET_LIBRARY}
+    ${ENET_LIBRARY}    
 )
 
 IF(MINGW)

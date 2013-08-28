@@ -5,7 +5,7 @@
 
 typedef struct texture_t {
     char *data;
-    unsigned int id;
+    unsigned int adapted;
     unsigned int w, h;
     unsigned int bitmap_w, bitmap_h;
 } texture;

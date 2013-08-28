@@ -1,7 +1,7 @@
 #ifndef _CONTROLLER_H
 #define _CONTROLLER_H
 
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 
 #include "game/har.h"
 

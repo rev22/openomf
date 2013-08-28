@@ -1,7 +1,7 @@
 #include "engine.h"
 #include "utils/log.h"
 #include "game/settings.h"
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <dumb/dumb.h>
 #include <enet/enet.h>
 #include <string.h>
@@ -45,14 +45,11 @@ int main(int argc, char *argv[]) {
     // Init libDumb
     dumb_register_stdfiles();
     
-    // Init SDL2
+    // Init SDL
     if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)) {
-        PERROR("SDL2 Initialization failed: %s", SDL_GetError());
+        PERROR("SDL Initialization failed: %s", SDL_GetError());
         goto exit_1;
     }
-    SDL_version sdl_linked;
-    SDL_GetVersion(&sdl_linked);
-    DEBUG("Found SDL v%d.%d.%d", sdl_linked.major, sdl_linked.minor, sdl_linked.patch);
     
     // Init enet
     if(enet_initialize() != 0) {

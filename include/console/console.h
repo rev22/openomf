@@ -1,7 +1,7 @@
 #ifndef _CONSOLE_H
 #define _CONSOLE_H
 
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include "utils/list.h"
 #include "utils/hashmap.h"
 #include "game/text/text.h"

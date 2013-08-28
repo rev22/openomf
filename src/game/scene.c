@@ -1,10 +1,9 @@
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <shadowdive/shadowdive.h>
 #include "controller/keyboard.h"
 #include "utils/array.h"
 #include "utils/log.h"
 #include "video/texture.h"
-#include "video/texturelist.h"
 #include "video/video.h"
 #include "audio/sound.h"
 #include "audio/sound_state.h"
@@ -187,7 +186,7 @@ int scene_load(scene *scene, unsigned int scene_id) {
     }
 
     // All done
-    DEBUG("Scene %i loaded! Textures now using %d bytes of (v)ram!", scene_id, texturelist_get_bsize());
+    DEBUG("Scene %i loaded!", scene_id);
     return 0;
 }
 

@@ -1,7 +1,7 @@
 #include "game/menu/textbutton.h"
 #include <stdlib.h>
 #include <string.h>
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 
 void textbutton_create(component *c, font *font, const char *text) {
     component_create(c);

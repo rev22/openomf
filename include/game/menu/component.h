@@ -1,7 +1,7 @@
 #ifndef _COMPONENT_H
 #define _COMPONENT_H
 
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 
 typedef struct component_t component;
 

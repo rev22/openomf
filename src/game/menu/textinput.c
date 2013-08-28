@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 
 #define COLOR_MENU_LINE   color_create(0,0,89,255)
 #define COLOR_MENU_BORDER color_create(0,0,243,255)
@@ -74,14 +74,14 @@ int textinput_event(component *c, SDL_Event *e) {
         textinput *tb = c->obj;
         unsigned char code = e->key.keysym.sym;
         unsigned char len = strlen(tb->buf);
-        const unsigned char *state = SDL_GetKeyboardState(NULL);
-        if (state[SDL_SCANCODE_BACKSPACE] || state[SDL_SCANCODE_DELETE]) {
+        const unsigned char *state = SDL_GetKeyState(NULL);
+        if (state[SDLK_BACKSPACE] || state[SDLK_DELETE]) {
             if (len > 0) {
                 tb->buf[len-1] = '\0';
             }
-        } else if(state[SDL_SCANCODE_LEFT]) {
+        } else if(state[SDLK_LEFT]) {
             // TODO move cursor to the left
-        } else if(state[SDL_SCANCODE_RIGHT]) {
+        } else if(state[SDLK_RIGHT]) {
             // TODO move cursor to the right
         } else if (code >= 32 && code <= 126) {
             if (len < sizeof(tb->buf)-1) {

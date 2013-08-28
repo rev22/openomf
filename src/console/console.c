@@ -183,12 +183,12 @@ int console_cmd_connect(scene *scene, void *userdata, int argc, char **argv) {
 
             // Player 2 controller -- Keyboard
             keys = malloc(sizeof(keyboard_keys));
-            keys->up = SDL_SCANCODE_UP;
-            keys->down = SDL_SCANCODE_DOWN;
-            keys->left = SDL_SCANCODE_LEFT;
-            keys->right = SDL_SCANCODE_RIGHT;
-            keys->punch = SDL_SCANCODE_RETURN;
-            keys->kick = SDL_SCANCODE_RSHIFT;
+            keys->up = SDLK_UP;
+            keys->down = SDLK_DOWN;
+            keys->left = SDLK_LEFT;
+            keys->right = SDLK_RIGHT;
+            keys->punch = SDLK_RETURN;
+            keys->kick = SDLK_RSHIFT;
             keyboard_create(player2_ctrl, keys);
             scene_set_player2_ctrl(scene, player2_ctrl);
 
@@ -240,12 +240,12 @@ int console_cmd_listen(scene *scene, void *userdata, int argc, char **argv) {
 
         // Player 1 controller -- Keyboard
         keys = malloc(sizeof(keyboard_keys));
-        keys->up = SDL_SCANCODE_UP;
-        keys->down = SDL_SCANCODE_DOWN;
-        keys->left = SDL_SCANCODE_LEFT;
-        keys->right = SDL_SCANCODE_RIGHT;
-        keys->punch = SDL_SCANCODE_RETURN;
-        keys->kick = SDL_SCANCODE_RSHIFT;
+        keys->up = SDLK_UP;
+        keys->down = SDLK_DOWN;
+        keys->left = SDLK_LEFT;
+        keys->right = SDLK_RIGHT;
+        keys->punch = SDLK_RETURN;
+        keys->kick = SDLK_RSHIFT;
         keyboard_create(player1_ctrl, keys);
         scene_set_player1_ctrl(scene, player1_ctrl);
 
@@ -482,34 +482,34 @@ void console_event(scene *scene, SDL_Event *e) {
     if (e->type == SDL_KEYDOWN) {
         unsigned char code = e->key.keysym.sym;
         unsigned char len = strlen(con->input);
-        const unsigned char *state = SDL_GetKeyboardState(NULL);
+        const unsigned char *state = SDL_GetKeyState(NULL);
         /*if ((code >= SDLK_a && code <= SDLK_z) || (code >= SDLK_0 && code <= SDLK_9) || code == SDLK_SPACE || code == SDLK) {*/
         // SDLK_UP and SDLK_DOWN does not work here
-        if(state[SDL_SCANCODE_UP]) {
+        if(state[SDLK_UP]) {
             if(con->histpos < HISTORY_MAX && con->histpos < (signed int)(list_size(&con->history)-1)) {
                 con->histpos++;
                 con->histpos_changed = 1;
             }
-        } else if(state[SDL_SCANCODE_DOWN]) {
+        } else if(state[SDLK_DOWN]) {
             if(con->histpos > -1) {
                 con->histpos--;
                 con->histpos_changed = 1;
             }
-        } else if(state[SDL_SCANCODE_LEFT]) {
+        } else if(state[SDLK_LEFT]) {
             // TODO move cursor to the left
-        } else if(state[SDL_SCANCODE_RIGHT]) {
+        } else if(state[SDLK_RIGHT]) {
             // TODO move cursor to the right
-        } else if (state[SDL_SCANCODE_BACKSPACE] || state[SDL_SCANCODE_DELETE]) {
+        } else if (state[SDLK_BACKSPACE] || state[SDLK_DELETE]) {
             if (len > 0) {
                 con->input[len-1] = '\0';
             }
-        } else if (state[SDL_SCANCODE_RETURN]) {
+        } else if (state[SDLK_RETURN]) {
             // send the input somewhere and clear the input line
             console_handle_line(scene);
             con->input[0] = '\0';
-        } else if(state[SDL_SCANCODE_PAGEUP]) {
+        } else if(state[SDLK_PAGEUP]) {
             console_output_scroll_up(1);
-        } else if(state[SDL_SCANCODE_PAGEDOWN]) {
+        } else if(state[SDLK_PAGEDOWN]) {
             console_output_scroll_down(1);
         } else if (code >= 32 && code <= 126) {
             if (len < sizeof(con->input)-1) {

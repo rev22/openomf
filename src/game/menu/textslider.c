@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 
 void textslider_create(component *c, font *font, const char *text, unsigned int positions) {
     component_create(c);

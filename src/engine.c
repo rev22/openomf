@@ -6,13 +6,12 @@
 #include "audio/music.h"
 #include "audio/soundloader.h"
 #include "video/texture.h"
-#include "video/texturelist.h"
 #include "video/video.h"
 #include "game/text/languages.h"
 #include "game/scene.h"
 #include "game/settings.h"
 #include "console/console.h"
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 
 int run = 0;
 int _vsync = 0;
@@ -26,7 +25,6 @@ int engine_init() {
     int fs = setting->video.fullscreen;
     int vsync = setting->video.vsync;
     _vsync = vsync;
-    texturelist_init();
     if(video_init(w, h, fs, vsync)) {
         return 1;
     }
@@ -163,7 +161,6 @@ void engine_close() {
     fonts_close();
     lang_close();
     video_close();
-    texturelist_close();
     audio_close();
     soundloader_close();
 }

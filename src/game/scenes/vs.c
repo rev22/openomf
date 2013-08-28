@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <shadowdive/shadowdive.h>
 #include "utils/log.h"
 #include "game/text/text.h"

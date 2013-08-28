@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 
 void textselector_create(component *c, font *font, const char *text, const char *initialvalue) {
     component_create(c);

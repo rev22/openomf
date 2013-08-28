@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <shadowdive/shadowdive.h>
 #include "engine.h"
 #include "utils/log.h"
@@ -136,7 +136,8 @@ int mechlab_event(scene *scene, SDL_Event *event) {
             break;
 
             case SDLK_DOWN:
-            break;
+	      break;
+	default: break;
         }
         return 1;
     }

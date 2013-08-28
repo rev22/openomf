@@ -1,6 +1,6 @@
 #include "game/scene.h"
 #include "game/scenes/intro.h"
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <shadowdive/shadowdive.h>
 
 int intro_init(scene *scene) {

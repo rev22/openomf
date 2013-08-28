@@ -19,7 +19,7 @@
 #include "game/menu/textslider.h"
 #include "controller/net_controller.h"
 #include "utils/log.h"
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <stdlib.h>
 #include <string.h>
 #include <chipmunk/chipmunk.h>
