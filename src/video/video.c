@@ -80,36 +80,74 @@ void video_render_background(texture *tex) {
 }
 
 void video_render_char(texture *tex, int sx, int sy, unsigned char r, unsigned char g, unsigned char b) {
-    if (!tex->adapted) adapt_texture(tex);
-    unsigned int l = SDL_MUSTLOCK(screen);
-    if (l) SDL_LockSurface(screen);
+    Uint8 Rshift = screen->format->Rshift;
+    Uint8 Gshift = screen->format->Gshift;
+    Uint8 Bshift = screen->format->Bshift;
+    Uint32 color = (r<<Rshift)|(g<<Gshift)|(b<<Bshift);
 
     unsigned int sw = screen->w;
     unsigned int sh = screen->h;
-    unsigned int sp = screen->pitch;
-    Uint32 *sd = screen->pixels;
     unsigned int w = tex->w;
     unsigned int h = tex->h;
+
+    int y_0, y_m, y_l;
+    if (sy < 0) {
+      y_0 = -sy;
+      sy = 0;
+    } else {
+      y_0 = 0;
+    }
+    y_l = sh - sy;
+    {
+      int y_l1 = h - y_0;
+      if (y_l < y_l1) {
+	y_m = y_0 + y_l;
+      } else {
+	y_m = h;
+	y_l = y_l1;
+      }
+    }
+    if (y_l < 0) return;
+
+    int x_0, x_m, x_l;
+    if (sx < 0) {
+      x_0 = -sx;
+      sx = 0;
+    } else {
+      x_0 = 0;
+    }
+    x_l = sw - sx;
+    {
+      int x_l1 = w - x_0;
+      if (x_l < x_l1) {
+	x_m = x_0 + x_l;
+      } else {
+	x_m = w;
+	x_l = x_l1;
+      }
+    }
+    if (x_l < 0) return;
+    
+    unsigned int l = SDL_MUSTLOCK(screen);
+    if (l) SDL_LockSurface(screen);
+
+    Uint32 *sd = screen->pixels;
+    unsigned int sp = screen->pitch;
     Uint32 *d = (void*)(tex->data);
 
-    int x = 0;
-    int y = 0;
+    int x;
+    int y;
 
-    Uint32 color = r|(g<<8)|(b<<16);
-    
     sp /= sizeof(Uint32);
-    for (y = 0; y < h; y++, sy++) {
-      if ((sy >= 0) && (sy < sh)) {
-	for (x = 0; x < w; x++, sx++) {
-	  if ((sx >= 0) && (sx < sw)) {
-	    Uint32 v = d[y*w+x];
-	    if (v&0xff000000) {
-	      sd[sy*sp + sx] = color;
-	    }
-	  }
+
+    for (y = y_0; y < y_m; y++, sy++) {
+      for (x = x_0; x < x_m; x++, sx++) {
+	Uint32 v = d[y*w+x];
+	if (v&0xff000000) {
+	  sd[sy*sp + sx] = color;
 	}
-	sx -= w;
       }
+      sx -= x_l;
     }
     
     if (l) SDL_UnlockSurface(screen);
@@ -135,237 +173,228 @@ static inline Uint8 blend_a(Uint8 o, Uint8 v, Uint8 alpha) {
 void video_render_sprite_flip(texture *tex, int sx, int sy, unsigned int rendering_mode, unsigned int flip_mode) {
     if (!tex->adapted) adapt_texture(tex);
 
+    unsigned int sw = screen->w;
+    unsigned int sh = screen->h;
+    unsigned int w = tex->w;
+    unsigned int h = tex->h;
+
+    int y_0, y_m, y_l;
+    if (sy < 0) {
+      y_0 = -sy;
+      sy = 0;
+    } else {
+      y_0 = 0;
+    }
+    y_l = sh - sy;
+    {
+      int y_l1 = h - y_0;
+      if (y_l < y_l1) {
+	y_m = y_0 + y_l;
+      } else {
+	y_m = h;
+	y_l = y_l1;
+      }
+    }
+    if (y_l < 0) return;
+
+    int x_0, x_m, x_l;
+    if (sx < 0) {
+      x_0 = -sx;
+      sx = 0;
+    } else {
+      x_0 = 0;
+    }
+    x_l = sw - sx;
+    {
+      int x_l1 = w - x_0;
+      if (x_l < x_l1) {
+	x_m = x_0 + x_l;
+      } else {
+	x_m = w;
+	x_l = x_l1;
+      }
+    }
+    if (x_l < 0) return;
+    
     unsigned int l = SDL_MUSTLOCK(screen);
     if (l) SDL_LockSurface(screen);
 
-    unsigned int sw = screen->w;
-    unsigned int sh = screen->h;
-    unsigned int sp = screen->pitch;
     Uint32 *sd = screen->pixels;
-    unsigned int w = tex->w;
-    unsigned int h = tex->h;
+    unsigned int sp = screen->pitch;
     Uint32 *d = (void*)(tex->data);
 
-    int x = 0;
-    int y = 0;
+    int x;
+    int y;
 
     sp /= sizeof(Uint32);
 
     if (rendering_mode == BLEND_ALPHA) {
       if (flip_mode&FLIP_VERTICAL) {
 	if (flip_mode&FLIP_HORIZONTAL) {
-	  for (y = h-1; y >= 0; y--, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = w-1; x >= 0; x--, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 v = d[y*w+x];
-		  if (v&0xff000000) {
-		    sd[sy*sp + sx] = v&0xffffff;
-		  }
-		}
+	  for (y = y_m - 1; y >= y_0; y--, sy++) {
+	    for (x = x_m - 1; x >= x_0; x--, sx++) {
+	      Uint32 v = d[y*w+x];
+	      if (v&0xff000000) {
+		sd[sy*sp + sx] = v&0xffffff;
 	      }
-	      sx -= w;
 	    }
+	    sx -= x_l;
 	  }
 	} else {
-	  for (y = h-1; y >= 0; y--, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = 0; x < w; x++, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 v = d[y*w+x];
-		  if (v&0xff000000) {
-		    sd[sy*sp + sx] = v&0xffffff;
-		  }
-		}
+	  for (y = y_m - 1; y >= y_0; y--, sy++) {
+	    for (x = x_0; x < x_m; x++, sx++) {
+	      Uint32 v = d[y*w+x];
+	      if (v&0xff000000) {
+		sd[sy*sp + sx] = v&0xffffff;
 	      }
-	      sx -= w;
 	    }
+	    sx -= x_l;
 	  }
 	}
       } else {
 	if (flip_mode&FLIP_HORIZONTAL) {
-	  for (y = 0; y < h; y++, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = w-1; x >= 0; x--, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 v = d[y*w+x];
-		  if (v&0xff000000) {
-		    sd[sy*sp + sx] = v&0xffffff;
-		  }
-		}
+	  for (y = y_0; y < y_m; y++, sy++) {
+	    for (x = x_m - 1; x >= x_0; x--, sx++) {
+	      Uint32 v = d[y*w + x];
+	      if (v&0xff000000) {
+		sd[sy*sp + sx] = v&0xffffff;
 	      }
-	      sx -= w;
 	    }
+	    sx -= x_l;
 	  }
 	} else {
-	  for (y = 0; y < h; y++, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = 0; x < w; x++, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 v = d[y*w+x];
-		  if (v&0xff000000) {
-		    sd[sy*sp + sx] = v&0xffffff;
-		  }
-		}
+	  for (y = y_0; y < y_m; y++, sy++) {
+	    for (x = x_0; x < x_m; x++, sx++) {
+	      Uint32 v = d[y*w + x];
+	      if (v&0xff000000) {
+		sd[sy*sp + sx] = v&0xffffff;
 	      }
-	      sx -= w;
 	    }
+	    sx -= x_l;
 	  }
 	}
       }
     } else if (rendering_mode == BLEND_ALPHA_FULL) {
       if (flip_mode&FLIP_VERTICAL) {
 	if (flip_mode&FLIP_HORIZONTAL) {
-	  for (y = h-1; y >= 0; y--, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = w-1; x >= 0; x--, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 si = sy*sp + sx;
-		  Uint32 v = d[y*w+x];
-		  Uint32 o = sd[si];
-		  Uint8 alpha = v>>24;
-		  sd[si] =
-		    BLEND((o&0xff), (v&0xff), alpha) |
-		    BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
-		    BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
-		}
-	      }
-	      sx -= w;
+	  for (y = y_m - 1; y >= y_0; y--, sy++) {
+	    for (x = x_m - 1; x >= x_0; x--, sx++) {
+	      Uint32 si = sy*sp + sx;
+	      Uint32 v = d[y*w+x];
+	      Uint32 o = sd[si];
+	      Uint8 alpha = v>>24;
+	      sd[si] =
+		BLEND((o&0xff), (v&0xff), alpha) |
+		BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha) << 8 |
+		BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
 	    }
+	    sx -= x_l;
 	  }
 	} else {
-	  for (y = h-1; y >= 0; y--, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = 0; x < w; x++, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 si = sy*sp + sx;
-		  Uint32 v = d[y*w+x];
-		  Uint32 o = sd[si];
-		  Uint8 alpha = v>>24;
-		  sd[si] =
-		    BLEND((o&0xff), (v&0xff), alpha) |
-		    BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
-		    BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
-		}
-	      }
-	      sx -= w;
+	  for (y = y_m - 1; y >= y_0; y--, sy++) {
+	    for (x = x_0; x < x_m; x++, sx++) {
+	      Uint32 si = sy*sp + sx;
+	      Uint32 v = d[y*w+x];
+	      Uint32 o = sd[si];
+	      Uint8 alpha = v>>24;
+	      sd[si] =
+		BLEND((o&0xff), (v&0xff), alpha) |
+		BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
+		BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
 	    }
+	    sx -= x_l;
 	  }
 	}
       } else {
 	if (flip_mode&FLIP_HORIZONTAL) {
-	  for (y = 0; y < h; y++, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = w-1; x >= 0; x--, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 si = sy*sp + sx;
-		  Uint32 v = d[y*w+x];
-		  Uint32 o = sd[si];
-		  Uint8 alpha = v>>24;
-		  sd[si] =
-		    BLEND((o&0xff), (v&0xff), alpha) |
-		    BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
-		    BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
-		}
-	      }
-	      sx -= w;
+	  for (y = y_0; y < y_m; y++, sy++) {
+	    for (x = x_m - 1; x >= x_0; x--, sx++) {
+	      Uint32 si = sy*sp + sx;
+	      Uint32 v = d[y*w+x];
+	      Uint32 o = sd[si];
+	      Uint8 alpha = v>>24;
+	      sd[si] =
+		BLEND((o&0xff), (v&0xff), alpha) |
+		BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
+		BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
 	    }
+	    sx -= x_l;
 	  }
 	} else {
-	  for (y = 0; y < h; y++, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = 0; x < w; x++, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 si = sy*sp + sx;
-		  Uint32 v = d[y*w+x];
-		  Uint32 o = sd[si];
-		  Uint8 alpha = v>>24;
-		  sd[si] =
-		    BLEND((o&0xff), (v&0xff), alpha) |
-		    BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
-		    BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
-		}
-	      }
-	      sx -= w;
+	  for (y = y_0; y < y_m; y++, sy++) {
+	    for (x = x_0; x < x_m; x++, sx++) {
+	      Uint32 si = sy*sp + sx;
+	      Uint32 v = d[y*w+x];
+	      Uint32 o = sd[si];
+	      Uint8 alpha = v>>24;
+	      sd[si] =
+		BLEND((o&0xff), (v&0xff), alpha) |
+		BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
+		BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
 	    }
+	    sx -= x_l;
 	  }
 	}
       }
     } else if (rendering_mode == BLEND_ADDITIVE) {
       if (flip_mode&FLIP_VERTICAL) {
 	if (flip_mode&FLIP_HORIZONTAL) {
-	  for (y = h-1; y >= 0; y--, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = w-1; x >= 0; x--, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 si = sy*sp + sx;
-		  Uint32 v = d[y*w+x];
-		  Uint32 o = sd[si];
-		  Uint8 alpha = v>>24;
-		  sd[si] =
-		    BLENDA((o&0xff), (v&0xff), alpha) |
-		    BLENDA(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
-		    BLENDA(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
-		}
-	      }
-	      sx -= w;
+	  for (y = y_m - 1; y >= y_0; y--, sy++) {
+	    for (x = x_m - 1; x >= x_0; x--, sx++) {
+	      Uint32 si = sy*sp + sx;
+	      Uint32 v = d[y*w+x];
+	      Uint32 o = sd[si];
+	      Uint8 alpha = v>>24;
+	      sd[si] =
+		BLENDA((o&0xff), (v&0xff), alpha) |
+		BLENDA(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
+		BLENDA(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
 	    }
+	    sx -= x_l;
 	  }
 	} else {
-	  for (y = h-1; y >= 0; y--, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = 0; x < w; x++, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 si = sy*sp + sx;
-		  Uint32 v = d[y*w+x];
-		  Uint32 o = sd[si];
-		  Uint8 alpha = v>>24;
-		  sd[si] =
-		    BLENDA((o&0xff), (v&0xff), alpha) |
-		    BLENDA(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
-		    BLENDA(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
-		}
-	      }
-	      sx -= w;
+	  for (y = y_m - 1; y >= y_0; y--, sy++) {
+	    for (x = x_0; x < x_m; x++, sx++) {
+	      Uint32 si = sy*sp + sx;
+	      Uint32 v = d[y*w+x];
+	      Uint32 o = sd[si];
+	      Uint8 alpha = v>>24;
+	      sd[si] =
+		BLENDA((o&0xff), (v&0xff), alpha) |
+		BLENDA(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
+		BLENDA(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
 	    }
+	    sx -= x_l;
 	  }
 	}
       } else {
 	if (flip_mode&FLIP_HORIZONTAL) {
-	  for (y = 0; y < h; y++, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = w-1; x >= 0; x--, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 si = sy*sp + sx;
-		  Uint32 v = d[y*w+x];
-		  Uint32 o = sd[si];
-		  Uint8 alpha = v>>24;
-		  sd[si] =
-		    BLEND((o&0xff), (v&0xff), alpha) |
-		    BLEND(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
-		    BLEND(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
-		}
-	      }
-	      sx -= w;
+	  for (y = y_0; y < y_m; y++, sy++) {
+	    for (x = x_m - 1; x >= x_0; x--, sx++) {
+	      Uint32 si = sy*sp + sx;
+	      Uint32 v = d[y*w+x];
+	      Uint32 o = sd[si];
+	      Uint8 alpha = v>>24;
+	      sd[si] =
+		BLENDA((o&0xff), (v&0xff), alpha) |
+		BLENDA(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
+		BLENDA(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
 	    }
+	    sx -= x_l;
 	  }
 	} else {
-	  for (y = 0; y < h; y++, sy++) {
-	    if ((sy >= 0) && (sy < sh)) {
-	      for (x = 0; x < w; x++, sx++) {
-		if ((sx >= 0) && (sx < sw)) {
-		  Uint32 si = sy*sp + sx;
-		  Uint32 v = d[y*w+x];
-		  Uint32 o = sd[si];
-		  Uint8 alpha = v>>24;
-		  sd[si] =
-		    BLENDA((o&0xff), (v&0xff), alpha) |
-		    BLENDA(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
-		    BLENDA(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
-		}
-	      }
-	      sx -= w;
+	  for (y = y_0; y < y_m; y++, sy++) {
+	    for (x = x_0; x < x_m; x++, sx++) {
+	      Uint32 si = sy*sp + sx;
+	      Uint32 v = d[y*w+x];
+	      Uint32 o = sd[si];
+	      Uint8 alpha = v>>24;
+	      sd[si] =
+		BLENDA((o&0xff), (v&0xff), alpha) |
+		BLENDA(((o>>8)&0xff), ((v>>8)&0xff), alpha)<<8 |
+		BLENDA(((o>>16)&0xff), ((v>>16)&0xff), alpha) << 16;
 	    }
+	    sx -= x_l;
 	  }
 	}
       }      
