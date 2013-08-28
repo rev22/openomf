@@ -1,3 +1,5 @@
+This fork provides support for compiling as a Debian package.  OpenOMF documentation follows:
+
 OpenOMF
 =======
 
