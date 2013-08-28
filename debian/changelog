@@ -1,0 +1,6 @@
+openomf (0.1.0-1) unstable; urgency=low
+
+  * Debianized github sources.
+  * Added wrapper script.
+
+ -- Michele Bini <michele.bini@gmail.com>  Wed, 28 Aug 2013 07:07:44 +0200

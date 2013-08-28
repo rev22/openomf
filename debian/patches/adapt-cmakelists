@@ -1,0 +1,49 @@
+Description: Adapt CMakeLists.txt
+ openomf (0.1.0-1) unstable; urgency=low
+ .
+   * Debianized github sources.
+Author: Michele Bini <michele.bini@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- openomf-0.1.0.orig/CMakeLists.txt
++++ openomf-0.1.0/CMakeLists.txt
+@@ -13,6 +13,8 @@ find_package(confuse)
+ find_package(GLEW)
+ find_package(Libintl)
+ 
++link_directories(${CMAKE_CURRENT_BINARY_DIR})
++
+ IF(MINGW)
+     set(CMAKE_C_FLAGS "-Wall -std=c99 -ggdb -Werror -DDEBUGMODE")
+ ELSE(MINGW)
+@@ -115,3 +117,18 @@ ENDIF(UNIX)
+ 
+ include_directories(${COREINCS})
+ target_link_libraries(openomf ${CORELIBS})
++
++# Install openomf wrapper script (sets config and data paths)
++install(PROGRAMS debian/bin/openomf
++  DESTINATION bin)
++
++install(TARGETS openomf
++  RUNTIME DESTINATION lib/openomf
++  LIBRARY DESTINATION lib/openomf
++  ARCHIVE DESTINATION lib/openomf
++  )
++
++install(
++  FILES build/shaders/light.ps
++  DESTINATION share/openomf/shaders
++  )

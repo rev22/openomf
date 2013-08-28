@@ -1,0 +1,74 @@
+#!/bin/sh
+
+# Copyright (c) 2013 Michele Bini
+
+# This script is free software: you can redistribute it and/or modify
+# it under the terms of the version 3 of the GNU General Public License
+# as published by the Free Software Foundation.
+
+# This script is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
+# This script is additionally released under the term of a MIT-style
+# license, which you can read in debian/copyright or LICENSE.txt
+# shipped with OpenOMF
+
+binary=/usr/lib/openomf/openomf
+resdir=""
+
+while case "$1" in
+    "--resources-dir"|"--resdir") shift; resdir="$(cd "$1"; pwd)"; shift ;;
+    "--help"|"-h")
+    shift
+    ($binary -v 2>&1) |head -n1
+    echo "Arguments:"
+    echo "--resdir,--resources-dir DIR  Set path for One Must Fall 2097 data"
+    echo "-h,--help      Print this help"
+    echo "-v,--version   Print version"
+    ($binary -h 2>&1)
+    exit
+    ;;
+
+    "-v"|"--version")
+    ($binary -v 2>&1)
+    exit
+    ;;
+
+    "")  false ;;
+    *)   false ;;
+    esac; do
+    true
+done
+
+set -e
+
+dir=~/.config/openomf
+
+mkdir -p "$dir"
+
+cd "$dir"
+
+set +e
+ln -s /usr/share/openomf/shaders . 2>/dev/null
+if [ -n "$resdir" ]; then
+    set -e
+    ln -sf "$resdir" resources
+    set +e
+else
+    ln -s /usr/share/openomf/resources . 2>/dev/null
+fi
+set -e
+
+if [ -e "resources/MAIN.BK" ]; then
+    true
+else
+    echo "Could not find file $(pwd)/resources/MAIN.BK" >&2
+    echo "Could not find location for One Must Fall 2097 data" >&2
+    echo "You can provide one with --resources-dir" >&2
+    exit 1
+fi
+
+exec $binary "$@"
+

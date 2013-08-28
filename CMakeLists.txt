@@ -13,6 +13,8 @@ find_package(confuse)
 find_package(GLEW)
 find_package(Libintl)
 
+link_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 IF(MINGW)
     set(CMAKE_C_FLAGS "-Wall -std=c99 -ggdb -Werror -DDEBUGMODE")
 ELSE(MINGW)
@@ -115,3 +117,18 @@ ENDIF(UNIX)
 
 include_directories(${COREINCS})
 target_link_libraries(openomf ${CORELIBS})
+
+# Install openomf wrapper script (sets config and data paths)
+install(PROGRAMS debian/bin/openomf
+  DESTINATION bin)
+
+install(TARGETS openomf
+  RUNTIME DESTINATION lib/openomf
+  LIBRARY DESTINATION lib/openomf
+  ARCHIVE DESTINATION lib/openomf
+  )
+
+install(
+  FILES build/shaders/light.ps
+  DESTINATION share/openomf/shaders
+  )
