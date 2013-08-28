@@ -1,4 +1,4 @@
-This fork provides support for compiling as a Debian package.  OpenOMF documentation follows:
+This GitHub fork provides support for compiling as a Debian package, and removes a dependency on OpenGL.
 
 OpenOMF
 =======
@@ -12,10 +12,9 @@ Dependencies
 
 * libShadowDive: https://github.com/omf2097/libShadowDive
 * libdumb: https://github.com/omf2097/libdumb-kataja
-* SDL2: http://www.libsdl.org/tmp/download-2.0.php
+* SDL1.2: http://www.libsdl.org/
 * OpenAL: http://kcat.strangesoft.net/openal.html
 * confuse: http://www.nongnu.org/confuse/
-* GLEW: http://glew.sourceforge.net/
 * Gettext (if you have problems with libintl)
 * Chipmunk: http://chipmunk-physics.net/
 * Enet: http://enet.bespin.org/
