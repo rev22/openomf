@@ -18,8 +18,18 @@
 binary=/usr/lib/openomf/openomf
 resdir=""
 
+absdir() {
+    cd "$1"; pwd
+}
+
+abspath() {
+    cd "$(dirname "$1")"; printf "%s
+" "$(pwd)/$(basename "$1")"
+}
+
 while case "$1" in
-    "--resources-dir"|"--resdir") shift; resdir="$(cd "$1"; pwd)"; shift ;;
+    "--binary") shift; binary="$(abspath "$1")"; shift ;;
+    "--resources-dir"|"--resdir") shift; resdir="$(absdir "$1")"; shift ;;
     "--help"|"-h")
     shift
     ($binary -v 2>&1) |head -n1
