@@ -59,15 +59,15 @@ static void adapt_texture(texture*tex) {
     fprintf(stderr, "Internal error: screen not yet initialized!");
     exit(EXIT_FAILURE);
   }
-  unsigned int *d = (void*)(tex->data);
+  Uint32 *d = (void*)(tex->data);
   if (d) {
     Uint8 Rshift = screen->format->Rshift;
     Uint8 Gshift = screen->format->Gshift;
     Uint8 Bshift = screen->format->Bshift;
     int c;
-    unsigned int s = tex->w * tex->h;
+    Uint32 s = tex->w * tex->h;
     for (c = 0; c < s; c++) {
-      unsigned int v = d[c];
+      Uint32 v = d[c];
       v = ((v&0xff)<<Rshift)|(((v>>8)&0xff)<<Gshift)|(((v>>16)&0xff)<<Bshift)|(v&0xff000000);
       d[c] = v;
     }
@@ -87,22 +87,22 @@ void video_render_char(texture *tex, int sx, int sy, unsigned char r, unsigned c
     unsigned int sw = screen->w;
     unsigned int sh = screen->h;
     unsigned int sp = screen->pitch;
-    unsigned int *sd = screen->pixels;
+    Uint32 *sd = screen->pixels;
     unsigned int w = tex->w;
     unsigned int h = tex->h;
-    unsigned int *d = (void*)(tex->data);
+    Uint32 *d = (void*)(tex->data);
 
     int x = 0;
     int y = 0;
 
-    int color = r|(g<<8)|(b<<16);
+    Uint32 color = r|(g<<8)|(b<<16);
     
-    sp /= sizeof(unsigned int);
+    sp /= sizeof(Uint32);
     for (y = 0; y < h; y++, sy++) {
       if ((sy >= 0) && (sy < sh)) {
 	for (x = 0; x < w; x++, sx++) {
 	  if ((sx >= 0) && (sx < sw)) {
-	    unsigned int v = d[y*w+x];
+	    Uint32 v = d[y*w+x];
 	    if (v&0xff000000) {
 	      sd[sy*sp + sx] = color;
 	    }
@@ -141,15 +141,15 @@ void video_render_sprite_flip(texture *tex, int sx, int sy, unsigned int renderi
     unsigned int sw = screen->w;
     unsigned int sh = screen->h;
     unsigned int sp = screen->pitch;
-    unsigned int *sd = screen->pixels;
+    Uint32 *sd = screen->pixels;
     unsigned int w = tex->w;
     unsigned int h = tex->h;
-    unsigned int *d = (void*)(tex->data);
+    Uint32 *d = (void*)(tex->data);
 
     int x = 0;
     int y = 0;
 
-    sp /= sizeof(unsigned int);
+    sp /= sizeof(Uint32);
 
     if (rendering_mode == BLEND_ALPHA) {
       if (flip_mode&FLIP_VERTICAL) {
@@ -158,7 +158,7 @@ void video_render_sprite_flip(texture *tex, int sx, int sy, unsigned int renderi
 	    if ((sy >= 0) && (sy < sh)) {
 	      for (x = w-1; x >= 0; x--, sx++) {
 		if ((sx >= 0) && (sx < sw)) {
-		  unsigned int v = d[y*w+x];
+		  Uint32 v = d[y*w+x];
 		  if (v&0xff000000) {
 		    sd[sy*sp + sx] = v&0xffffff;
 		  }
@@ -172,7 +172,7 @@ void video_render_sprite_flip(texture *tex, int sx, int sy, unsigned int renderi
 	    if ((sy >= 0) && (sy < sh)) {
 	      for (x = 0; x < w; x++, sx++) {
 		if ((sx >= 0) && (sx < sw)) {
-		  unsigned int v = d[y*w+x];
+		  Uint32 v = d[y*w+x];
 		  if (v&0xff000000) {
 		    sd[sy*sp + sx] = v&0xffffff;
 		  }
@@ -188,7 +188,7 @@ void video_render_sprite_flip(texture *tex, int sx, int sy, unsigned int renderi
 	    if ((sy >= 0) && (sy < sh)) {
 	      for (x = w-1; x >= 0; x--, sx++) {
 		if ((sx >= 0) && (sx < sw)) {
-		  unsigned int v = d[y*w+x];
+		  Uint32 v = d[y*w+x];
 		  if (v&0xff000000) {
 		    sd[sy*sp + sx] = v&0xffffff;
 		  }
@@ -202,7 +202,7 @@ void video_render_sprite_flip(texture *tex, int sx, int sy, unsigned int renderi
 	    if ((sy >= 0) && (sy < sh)) {
 	      for (x = 0; x < w; x++, sx++) {
 		if ((sx >= 0) && (sx < sw)) {
-		  unsigned int v = d[y*w+x];
+		  Uint32 v = d[y*w+x];
 		  if (v&0xff000000) {
 		    sd[sy*sp + sx] = v&0xffffff;
 		  }
