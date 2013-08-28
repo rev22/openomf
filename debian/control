@@ -1,7 +1,7 @@
 Source: openomf
 Priority: extra
 Maintainer: Michele Bini <michele.bini@gmail.com>
-Build-Depends: debhelper (>= 8.0.0), cmake, cdbs, libdumb-kataja-dev, libshadowdive-dev, libsdl2-dev, chipmunk-dev, libconfuse-dev, libenet-dev
+Build-Depends: debhelper (>= 8.0.0), cmake, cdbs, libdumb-kataja-dev, libshadowdive-dev, libsdl1.2-dev, chipmunk-dev, libconfuse-dev, libenet-dev
 Standards-Version: 3.9.4
 Section: games
 Homepage: https://github.com/omf2097/openomf
