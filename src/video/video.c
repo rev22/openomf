@@ -107,7 +107,7 @@ void video_render_char(texture *tex, int sx, int sy, unsigned char r, unsigned c
 	y_l = y_l1;
       }
     }
-    if (y_l < 0) return;
+    if (y_l <= 0) return;
 
     int x_0, x_m, x_l;
     if (sx < 0) {
@@ -126,7 +126,7 @@ void video_render_char(texture *tex, int sx, int sy, unsigned char r, unsigned c
 	x_l = x_l1;
       }
     }
-    if (x_l < 0) return;
+    if (x_l <= 0) return;
     
     unsigned int l = SDL_MUSTLOCK(screen);
     if (l) SDL_LockSurface(screen);
@@ -195,7 +195,7 @@ void video_render_sprite_flip(texture *tex, int sx, int sy, unsigned int renderi
 	y_l = y_l1;
       }
     }
-    if (y_l < 0) return;
+    if (y_l <= 0) return;
 
     int x_0, x_m, x_l;
     if (sx < 0) {
@@ -214,7 +214,7 @@ void video_render_sprite_flip(texture *tex, int sx, int sy, unsigned int renderi
 	x_l = x_l1;
       }
     }
-    if (x_l < 0) return;
+    if (x_l <= 0) return;
     
     unsigned int l = SDL_MUSTLOCK(screen);
     if (l) SDL_LockSurface(screen);
